@@ -28,5 +28,3 @@ class DatabaseSessionManager:
 async def get_db():
     async with DatabaseSessionManager(SessionLocal) as session:
         yield session
-
-

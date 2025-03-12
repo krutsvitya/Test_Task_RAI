@@ -38,6 +38,3 @@ class UserRepository:
         query = select(User).where(User.id == user_id)
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
-
-
-

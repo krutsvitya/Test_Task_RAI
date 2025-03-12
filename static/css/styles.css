@@ -104,7 +104,6 @@ body {
   font-weight: 300;
 }
 
-/* Auth Container */
 #auth-container {
   display: flex;
   flex-direction: column;
@@ -278,7 +277,6 @@ body {
   box-shadow: none;
 }
 
-/* Chat Container */
 #chat-container {
   display: flex;
   flex: 1;
@@ -293,7 +291,6 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Chat Sidebar */
 .chat-sidebar {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
@@ -393,7 +390,6 @@ body {
   height: 95px;
 }
 
-/* Chat Content */
 .chat-content {
   flex: 1;
   display: flex;
@@ -630,7 +626,6 @@ body {
   filter: drop-shadow(0 2px 3px rgba(255, 255, 255, 0.3));
 }
 
-/* Dialog styling */
 .dialog {
   display: none;
   position: fixed;
@@ -693,7 +688,6 @@ body {
   content: "💬";
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .container {
     padding: 10px;
@@ -726,7 +720,6 @@ body {
   }
 }
 
-/* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
@@ -741,7 +734,6 @@ body {
   animation: fadeIn 0.4s ease-in-out;
 }
 
-/* Loading indicator */
 .typing-indicator {
   display: flex;
   align-items: center;
@@ -800,7 +792,6 @@ body {
   100% { transform: translateY(0); }
 }
 
-/* Alert styling */
 .alert {
   position: fixed;
   top: 20px;
@@ -846,7 +837,6 @@ body {
   transform: translateY(-10px);
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -857,15 +847,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00CED1, #008B8B);
+  background: var(--primary-color);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #008B8B, #006666);
+  background: var(--primary-light);
 }
 
-/* Additional animations */
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -876,7 +865,6 @@ body {
   animation: pulse 0.3s ease-in-out;
 }
 
-/* Time stamp for messages */
 .message-time {
   font-size: 0.7rem;
   color: #6b7280;
@@ -885,7 +873,6 @@ body {
   right: 10px;
 }
 
-/* Fix for message content and input textarea */
 .message-content {
   font-family: var(--font-main);
   word-break: break-word;
@@ -893,12 +880,10 @@ body {
   color: var(--light-color);
 }
 
-/* Make sure all text inputs have consistent font */
 input, textarea, button {
   font-family: var(--font-main);
 }
 
-/* Chat Item Delete Button */
 .chat-item-options {
   position: absolute;
   right: 10px;
@@ -924,7 +909,6 @@ input, textarea, button {
   background-color: #fee2e2;
 }
 
-/* Empty state */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -952,7 +936,6 @@ input, textarea, button {
   max-width: 400px;
 }
 
-/* Highlight on new message */
 @keyframes highlightNew {
   0% { background-color: var(--hover-color); }
   100% { background-color: transparent; }
@@ -962,7 +945,6 @@ input, textarea, button {
   animation: highlightNew 2s ease;
 }
 
-/* Message actions (copy, etc) */
 .message-actions {
   position: absolute;
   top: 5px;
@@ -991,7 +973,6 @@ input, textarea, button {
   background-color: var(--hover-color);
 }
 
-/* Welcome screen */
 .welcome-screen {
   display: flex;
   flex-direction: column;
@@ -1021,4 +1002,22 @@ input, textarea, button {
   gap: 20px;
   max-width: 800px;
   width: 100%;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+#delete-dialog p {
+    margin-bottom: 20px;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 10px;
 }

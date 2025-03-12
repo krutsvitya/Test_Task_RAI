@@ -12,8 +12,9 @@ from config.db import get_db
 from config.models import Chat, Message
 from src.auth.schemas import MessageRequest, ChatRenameRequest
 from src.auth.utils import get_current_user
+from src.openAI.openAI_utils import analyze_with_chatgpt
 from src.openAI.repos import OpenAIRepository
-from src.openAI.scraping_utils import get_website_content, analyze_with_chatgpt
+from src.openAI.scraping_utils import get_website_content
 
 load_dotenv()
 router = APIRouter()
@@ -27,8 +28,7 @@ client = openai.OpenAI(api_key=api_key)
 
 @router.post("/chat/new")
 async def create_chat(
-    db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
 ):
     """Создает новый чат и возвращает его ID."""
     chat = Chat(name="Новый чат", user_id=current_user.id)
@@ -42,7 +42,7 @@ async def create_chat(
 async def get_chat_messages(
     chat_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
 ):
     """Возвращает историю сообщений чата, если он принадлежит текущему пользователю."""
     ai_repos = OpenAIRepository(db)
@@ -56,12 +56,14 @@ async def get_chat_messages(
 
     messages = []
     for msg in chat.messages:
-        messages.append({
-            "id": msg.id,
-            "text": msg.text,
-            "sender": msg.sender,
-            "timestamp": msg.timestamp.isoformat()
-        })
+        messages.append(
+            {
+                "id": msg.id,
+                "text": msg.text,
+                "sender": msg.sender,
+                "timestamp": msg.timestamp.isoformat(),
+            }
+        )
 
     return {"chat_id": chat.id, "messages": messages}
 
@@ -71,7 +73,7 @@ async def send_message(
     chat_id: int,
     message: MessageRequest,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
 ):
     result = await db.execute(select(Chat).filter(Chat.id == chat_id))
     chat = result.scalars().first()
@@ -79,7 +81,7 @@ async def send_message(
     if not chat or chat.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Чат не найден")
 
-    url_pattern = re.compile(r'https?://\S+')
+    url_pattern = re.compile(r"https?://\S+")
     url_match = url_pattern.search(message.text)
 
     if url_match:
@@ -106,7 +108,7 @@ async def rename_chat(
     chat_id: int,
     request: ChatRenameRequest,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
 ):
     """Переименовывает чат, если он принадлежит текущему пользователю."""
     result = await db.execute(select(Chat).filter(Chat.id == chat_id))
@@ -123,8 +125,7 @@ async def rename_chat(
 
 @router.get("/chats/list")
 async def list_chats(
-    db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    db: AsyncSession = Depends(get_db), current_user=Depends(get_current_user)
 ):
     """Возвращает список всех чатов с предпросмотром последнего сообщения для текущего пользователя."""
     ai_repos = OpenAIRepository(db)
@@ -138,13 +139,13 @@ async def list_chats(
             if user_messages:
                 sorted_messages = sorted(user_messages, key=lambda x: x.timestamp)
                 first_message = sorted_messages[0].text
-                preview = first_message[:25] + "..." if len(first_message) > 25 else first_message
+                preview = (
+                    first_message[:25] + "..."
+                    if len(first_message) > 25
+                    else first_message
+                )
 
-        chat_list.append({
-            "id": chat.id,
-            "name": chat.name,
-            "preview": preview
-        })
+        chat_list.append({"id": chat.id, "name": chat.name, "preview": preview})
 
     return {"chats": chat_list}
 
@@ -153,7 +154,7 @@ async def list_chats(
 async def delete_chat(
     chat_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
 ):
     """Удаляет чат и все его сообщения, если он принадлежит текущему пользователю."""
     result = await db.execute(select(Chat).filter(Chat.id == chat_id))
@@ -166,6 +167,3 @@ async def delete_chat(
     await db.commit()
 
     return {"status": "success", "message": "Чат успешно удален"}
-
-
-

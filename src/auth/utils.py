@@ -17,6 +17,7 @@ VERIFICATION_TOKEN_EXPIRE_HOURS = settings.verification_token_expire_hours
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
+
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

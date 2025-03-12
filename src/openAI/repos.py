@@ -21,8 +21,9 @@ class OpenAIRepository:
     async def get_all_chats(self, user_id: int):
         """Получает все чаты с их сообщениями для конкретного пользователя."""
         result = await self.session.execute(
-            select(Chat).options(selectinload(Chat.messages)).filter(Chat.user_id == user_id)
-
+            select(Chat)
+            .options(selectinload(Chat.messages))
+            .filter(Chat.user_id == user_id)
         )
         chats = result.scalars().all()
         return chats

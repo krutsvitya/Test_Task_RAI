@@ -456,10 +456,6 @@ function setUserDisplay(username) {
 }
 
 async function deleteChat(chatId) {
-    if (!confirm('Вы уверены, что хотите удалить этот чат?')) {
-        return;
-    }
-
     const token = localStorage.getItem('access_token');
     try {
         const response = await fetch(`/chat/${chatId}`, {
@@ -475,6 +471,7 @@ async function deleteChat(chatId) {
                 chatItem.remove();
             }
 
+            // После удаления текущего чата выбираем другой или создаем новый
             if (localStorage.getItem('current_chat_id') === chatId) {
                 const chatItems = document.querySelectorAll('.chat-item');
                 if (chatItems.length > 0) {
@@ -565,4 +562,19 @@ async function refreshToken() {
     }
 }
 
+function showDeleteConfirmation() {
+    document.getElementById('delete-dialog').style.display = 'flex';
+}
+
+function closeDeleteDialog() {
+    document.getElementById('delete-dialog').style.display = 'none';
+}
+
+function deleteChatConfirm() {
+    const chatId = localStorage.getItem('current_chat_id');
+    deleteChat(chatId);
+    closeDeleteDialog();
+}
+
 setInterval(refreshToken, 55 * 60 * 1000);
+

@@ -16,12 +16,14 @@ from src.auth.schemas import UserCreate, UserResponse, Token
 from src.auth.utils import (
     create_access_token,
     create_refresh_token,
-    decode_access_token, get_current_user,
+    decode_access_token,
+    get_current_user,
 )
 
 router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 @router.post("/register", response_model=UserResponse)
 async def register(
@@ -43,15 +45,15 @@ async def login_for_access_token(
     user_repo = UserRepository(db)
     user = await user_repo.get_user_by_username(form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=401,
-            detail="Incorrect username or password"
-        )
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(data={"sub": user.username})
-    return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
+    return Token(
+        access_token=access_token, refresh_token=refresh_token, token_type="bearer"
+    )
 
-@router.get('/user/me')
+
+@router.get("/user/me")
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
 
@@ -77,12 +79,12 @@ async def refresh_token(
     )
 
 
-@router.get('/user/{user_id}')
+@router.get("/user/{user_id}")
 async def get_user_by_id(
-        user_id: int,
-        current_user: User = Depends(get_current_user),
-        db: AsyncSession = Depends(get_db)):
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
     user_repos = UserRepository(db)
     user = await user_repos.get_user_by_id(user_id)
     return user
-
