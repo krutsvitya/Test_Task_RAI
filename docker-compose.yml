@@ -17,7 +17,7 @@ services:
       retries: 5
 
   web:
-    build: .
+    image: krutsvitya/rai_test:latest
     container_name: fastapi_app
     env_file:
       - .env
